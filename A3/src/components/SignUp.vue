@@ -5,6 +5,11 @@ import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from "vue-router"
 import { send } from '@/api/send'
+
+/**
+ * Send template
+ * @type {import('vue').Ref<string>}
+ */
 const sendTemplate = {
     personalizations: [
         {
@@ -93,10 +98,6 @@ const submitForm = async (formEl) => {
                         send(sendTemplate).then(res => {
                             if (res.code === 202) {
                                 console.log("Send email success!")
-                                // ElMessage({
-                                //     message: 'Send email success!',
-                                //     type: 'success',
-                                // })
                             }
                             console.log(res)
                         }).catch(err => {
@@ -136,18 +137,9 @@ const submitForm = async (formEl) => {
         <h2 class="form-tit">Sign up </h2>
         <el-form ref="ruleFormRef" style="width:600px" :model="ruleForm" :rules="rules" label-width="auto"
             class="demo-ruleForm" status-icon>
-            <!-- <el-form-item label="username" prop="name">
-                <el-input v-model="ruleForm.name" />
-            </el-form-item> -->
             <el-form-item label="Email address" prop="email">
                 <el-input v-model="ruleForm.email"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="User Type" prop="type">
-                <el-select v-model="ruleForm.type" placeholder="User Type">
-                    <el-option label="volunteer" value="volunteer" />
-                    <el-option label="user" value="user" />
-                </el-select>
-            </el-form-item> -->
             <el-form-item label="Password" prop="pass">
                 <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
             </el-form-item>

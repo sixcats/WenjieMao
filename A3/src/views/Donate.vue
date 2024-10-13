@@ -33,7 +33,8 @@
     :size="10" :disabled="false" layout="total, sizes, prev, pager, next, jumper" :total="allData.length"
     @size-change="handleSizeChange" @current-change="handleCurrentChange" style="padding-top:1%;padding-bottom:5%" />
 
-  <el-dialog v-model="saveDialogVisible" title="Donation Now" style="height: 600px;">
+  <el-dialog v-model="saveDialogVisible" title="Donation Now" style="height: 600px;"
+    @keyup.enter="submitForm(donationFormRef)">
     <el-form :model="donationForm" ref="donationFormRef" status-icon>
       <el-alert type="info" show-icon :closable="false">
         <p>
@@ -80,7 +81,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="saveDialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="submitForm(donationFormRef)" @keyup.enter="submitForm(donationFormRef)">
+        <el-button type="primary" @click="submitForm(donationFormRef)">
           Donate Now
         </el-button>
       </div>
@@ -90,18 +91,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineComponent } from 'vue'
+import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
-import { Value } from 'sass';
 
+// Define the current page number
 const currentPage = ref(1)
+// Define the number of items per page
 const pageSize = ref(10)
 
+// Define an array of project options for selecting donation projects
 const projectOptions = [
   { value: 'project1', label: 'Project 1' },
   { value: 'project2', label: 'Project 2' },
   { value: 'project3', label: 'Project 3' }
 ]
+// Define an array containing all donation data
 const allData = ref([
   {
     amount: '100',
@@ -114,20 +118,68 @@ const allData = ref([
     project: 'project2',
     contact: 'example@example.com',
     anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
+  }, {
+    amount: '200',
+    project: 'project2',
+    contact: 'example@example.com',
+    anonymous: 'No'
   }
 ])
+// Initialize the table display data based on the current page and items per page
 const tableData = ref(allData.value.slice(0, pageSize.value))
+// Define the visibility state of the save dialog
 const saveDialogVisible = ref(false)
+// Define a reference to the donation form
 const donationFormRef = ref()
+// Define the query form data object
 const queryForm = ref({
   amount: ''
 })
+
+// Define the donation form data object with the default anonymous option set to "No"
 const donationForm = ref({
   amount: '',
   project: '',
   contact: '',
   anonymous: 'No' // Default selection
 })
+
+// Search function to filter data by donation amount
 const search = () => {
   if (!queryForm.value.amount) {
     tableData.value = allData.value
@@ -135,10 +187,13 @@ const search = () => {
   }
   tableData.value = allData.value.filter((item) => item.amount === queryForm.value.amount)
 }
+
+// Submit form function to validate form data and add it to the table data
 const submitForm = async (formEl) => {
   const isValid = await formEl.validate()
   if (isValid) {
-    tableData.value.push(donationForm.value)
+    allData.value.push(donationForm.value)
+    tableData.value = allData.value.slice(0, pageSize.value)
     saveDialogVisible.value = false
     ElNotification({
       title: 'Success',
@@ -147,21 +202,29 @@ const submitForm = async (formEl) => {
     })
   }
 }
+
+// Delete row function to remove data at the specified index from both allData and tableData
 const deleteRow = (index: number) => {
   allData.value.splice(index, 1)
   tableData.value = allData.value.slice(0, pageSize.value)
 }
+
+// Function to get the project label based on the project value
 const projectText = (project: string) => {
   const option = projectOptions.find((item) => item.value === project);
   return option ? option.label : 'Unknown';
 }
 
+// Update table data when the number of items per page changes
 const handleSizeChange = (val) => {
   tableData.value = allData.value.slice(0, val)
 }
+
+// Update table data when the current page changes
 const handleCurrentChange = (val) => {
   tableData.value = allData.value.slice((val - 1) * pageSize.value, val * pageSize.value)
 }
+
 
 </script>
 

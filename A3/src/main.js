@@ -20,7 +20,7 @@ app.use(ElementPlus)
 app.use(GoogleMap, {
     load: {
         key: 'AIzaSyCf7QJKKMGq0O3jA0UKef-AvlDWOnGZMg8',
-        libraries: 'places', // 启用地点搜索库
+        libraries: 'places',
     },
 })
 
